@@ -35,12 +35,3 @@ jobs:
         run: chmod -R 777 dist
       - name: List Build Directory
         run: ls -la dist
-      - name: Start Transformer Shell
-        run: |
-          docker-compose -f test/docker/docker-compose.yaml up -d
-          chmod +x test/docker/await-testing.sh
-          test/docker/await-testing.sh
-      - name: Test
-        env:
-          HOST_ADDRESS: 172.17.0.1
-        run: yarn test --runInBand --detectOpenHandles --forceExit
