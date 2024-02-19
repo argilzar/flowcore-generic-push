@@ -8,6 +8,11 @@
 * Added push name as a feature so that a generic push status page can be done ([34134c0](https://github.com/argilzar/flowcore-generic-push/commit/34134c0db9b79689d08b17caa308fa6a51eb13ea))
 * Initial release ([20af85a](https://github.com/argilzar/flowcore-generic-push/commit/20af85a435ca37cf870786cf76a7913308f61b8b))
 
+
+### Bug Fixes
+
+* No test ([4639cd1](https://github.com/argilzar/flowcore-generic-push/commit/4639cd149881a31dce6f2e93370336312b282d50))
+
 ## [2.0.0](https://github.com/flowcore-io/nodejs-typescript-transformer-example/compare/v1.3.1...v2.0.0) (2023-10-24)
 
 
