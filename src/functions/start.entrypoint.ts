@@ -5,6 +5,6 @@
 
 export default async function () {
   console.log(
-    `Initializing push adapter using webhook ${process.env.WEBHOOK_URL}`,
+    `Initializing push adapter using webhook ${process.env.WEBHOOK_URL}.`,
   );
 }
