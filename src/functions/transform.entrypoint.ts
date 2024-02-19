@@ -5,7 +5,7 @@
 // the read model adapter.
 // -----------------------------------------------------------------------------
 
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import * as process from "process";
 
 interface Input<T = any> {
@@ -14,6 +14,7 @@ interface Input<T = any> {
   payload: T;
 }
 
+const pushName = process.env.PUSH_NAME || undefined;
 const webhookUrl = process.env.WEBHOOK_URL || "";
 const authType = process.env.AUTH_TYPE || "";
 const authHeader = process.env.AUTH_HEADER || "";
@@ -25,11 +26,12 @@ interface WebhookResponse {
   statusText: string;
   timestamp?: string;
   source_eventId?: string;
+  pushName?: string;
 }
 
 export default async function (input: Input) {
   try {
-    const config: axios.AxiosRequestConfig = {
+    const config: AxiosRequestConfig = {
       headers: {
         "Content-Type": "application/json",
       },
@@ -58,6 +60,7 @@ export default async function (input: Input) {
       statusText: response.statusText,
       source_eventId: input.eventId,
       timestamp: new Date().toISOString(),
+      pushName,
     };
     return webhookResponse;
   } catch (error) {
@@ -66,6 +69,7 @@ export default async function (input: Input) {
       statusText: error.response?.statusText || "Internal Server Error",
       source_eventId: input.eventId,
       timestamp: new Date().toISOString(),
+      pushName,
     } as WebhookResponse;
   }
 }
