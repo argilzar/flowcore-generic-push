@@ -42,7 +42,7 @@ If you want to store the response from the webhook, you can pipe the response to
 }
 ```
 
-In case of an error during the execution of the function, it returns a `WebhookResponse` object with a status of 500 and a status text of "Internal Server Error". The `source_eventId`, `timestamp`, and `pushName` fields are also included in the error response.
+In case of an error during the execution an object with a status of 500 and a status text of "Internal Server Error". The `source_eventId`, `timestamp`, and `pushName` fields are also included in the error response.
 
 ## Error Example
 
