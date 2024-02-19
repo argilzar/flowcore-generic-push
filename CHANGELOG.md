@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/argilzar/flowcore-generic-push/compare/v3.1.0...v3.2.0) (2024-02-19)
+
+
+### Features
+
+* Add perf_hooks dependency and improve transform function ([b2af954](https://github.com/argilzar/flowcore-generic-push/commit/b2af954b1d00d5c77911f69f3824244fc2d25581))
+
 ## [3.1.0](https://github.com/argilzar/flowcore-generic-push/compare/v1.0.0...v3.1.0) (2024-02-19)
 
 
