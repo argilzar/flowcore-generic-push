@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.1.0](https://github.com/argilzar/flowcore-generic-push/compare/v1.0.0...v3.1.0) (2024-02-19)
+
+
+### Features
+
+* Release yes ([ab5cea4](https://github.com/argilzar/flowcore-generic-push/commit/ab5cea4a7613058f15499468e9aa997926f558ea))
+* Release! ([8a03cfe](https://github.com/argilzar/flowcore-generic-push/commit/8a03cfea40756713dc291558089ab563a0898b8c))
+* upload s3 ([a139ebf](https://github.com/argilzar/flowcore-generic-push/commit/a139ebff9f64f03b6ad8abfde44e1899e51b4d75))
+
+
+### Bug Fixes
+
+* Release! ([3a2bba8](https://github.com/argilzar/flowcore-generic-push/commit/3a2bba8b63eee99cd535e87371cb791153e6035f))
+* Trigger new version for upload ([ee98506](https://github.com/argilzar/flowcore-generic-push/commit/ee985062797e7bcdd253ff7c2d652b20c734055d))
+
+
+### Miscellaneous Chores
+
+* release 3.0.0 ([5221e00](https://github.com/argilzar/flowcore-generic-push/commit/5221e00bb4aa5b6fb32945f66077ee0370973bda))
+* release 3.1.0 ([51a9aef](https://github.com/argilzar/flowcore-generic-push/commit/51a9aeff4b8817870a26faea0f4b3af20002a35f))
+
 ## 1.0.0 (2024-02-19)
 
 
