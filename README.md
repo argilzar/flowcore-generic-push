@@ -6,6 +6,9 @@ This is a generic push adapter for the flowcore.io platform. It is used to push 
 
 Setup a scenario using this typescript adapter.
 
+![scenario](https://github.com/argilzar/flowcore-generic-push/assets/60230/aa17b8f9-7b91-4f75-91af-ce00073f0a61)
+
+
 Set the appropriate environment variables:
 
 - `WEBHOOK_URL`: The URL of the webhook.
