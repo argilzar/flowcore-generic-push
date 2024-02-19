@@ -7,11 +7,14 @@
 
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import * as process from "process";
+import { performance } from "perf_hooks";
 
 interface Input<T = any> {
   eventId: string;
   validTime: string;
   payload: T;
+  eventType: string;
+  aggregator: string;
 }
 
 const pushName = process.env.PUSH_NAME || undefined;
@@ -27,6 +30,9 @@ interface WebhookResponse {
   timestamp?: string;
   source_eventId?: string;
   pushName?: string;
+  eventType: string;
+  aggregator: string;
+  response_time?: number;
 }
 
 export default async function (input: Input) {
@@ -47,12 +53,13 @@ export default async function (input: Input) {
       config.headers.Authorization = authHeader;
       break;
     }
-
+    const startTime = performance.now();
     const response: AxiosResponse = await axios.post(
       webhookUrl,
       input.payload,
       config,
     );
+    const endTime = performance.now();
 
     // Constructing the response object
     const webhookResponse: WebhookResponse = {
@@ -61,6 +68,9 @@ export default async function (input: Input) {
       source_eventId: input.eventId,
       timestamp: new Date().toISOString(),
       pushName,
+      eventType: input.eventType,
+      aggregator: input.aggregator,
+      response_time: Math.round(endTime - startTime),
     };
     return webhookResponse;
   } catch (error) {
@@ -70,6 +80,8 @@ export default async function (input: Input) {
       source_eventId: input.eventId,
       timestamp: new Date().toISOString(),
       pushName,
+      eventType: input.eventType,
+      aggregator: input.aggregator,
     } as WebhookResponse;
   }
 }

@@ -19,12 +19,14 @@ app.get("/health", async (req: Request, res: Response): Promise<Response> => {
 app.post(
   "/transform",
   async (req: Request, res: Response): Promise<Response> => {
-    const { eventId, validTime, payload } = req.body;
+    const { eventId, validTime, payload, eventType, aggregator } = req.body;
     return res.send(
       await transform({
         eventId,
         validTime,
         payload,
+        eventType,
+        aggregator,
       }),
     );
   },
