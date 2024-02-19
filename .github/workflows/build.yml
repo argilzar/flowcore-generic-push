@@ -61,3 +61,20 @@ jobs:
             dist/${{ steps.package.outputs.value }}-${{ steps.version.outputs.value }}.zip
           upload-release-files: true
           release-upload-url: ${{ github.event.release.upload_url }}
+
+      - name: Upload release artifact to s3 public runtimes
+        uses: a-sync/s3-uploader@master
+        with:
+          args: --acl public-read
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.FLOWCORE_PUBLIC_RUNTIMES_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.FLOWCORE_PUBLIC_RUNTIMES_SECRET_ACCESS_KEY }}
+          AWS_REGION: "eu-west-1"
+          S3_BUCKET: "flowcore-public-runtimes"
+          S3_KEY: ${{ steps.package.outputs.value }}-${{ steps.version.outputs.value }}.zip
+          FILE: dist/${{ steps.package.outputs.value }}-${{ steps.version.outputs.value }}.zip
+
+      - name: Display Link
+        run: |
+          echo "### Release Artifacts 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "Flowcore S3 Public Runtimes Link: [Runtime](https://flowcore-public-runtimes.s3.eu-west-1.amazonaws.com/${{ steps.package.outputs.value }}-${{ steps.version.outputs.value }}.zip)" >> $GITHUB_STEP_SUMMARY

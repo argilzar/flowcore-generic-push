@@ -4,17 +4,68 @@
 // to transform an event, the return value of this function will be passed to
 // the read model adapter.
 // -----------------------------------------------------------------------------
+
+import axios, { AxiosResponse } from "axios";
+import * as process from "process";
+
 interface Input<T = any> {
   eventId: string;
   validTime: string;
   payload: T;
 }
 
+const webhookUrl = process.env.WEBHOOK_URL || "";
+const authType = process.env.AUTH_TYPE || "";
+const authHeader = process.env.AUTH_HEADER || "";
+const authUsername = process.env.AUTH_USERNAME || "";
+const authPassword = process.env.AUTH_PASSWORD || "";
+
+interface WebhookResponse {
+  status: number;
+  statusText: string;
+  timestamp?: string;
+  source_eventId?: string;
+}
+
 export default async function (input: Input) {
-  console.info(`Received event ${input.eventId}, with payload ${JSON.stringify(input.payload)} and valid time ${input.validTime}`);
-  return {
-    eventid: input.eventId,
-    validtime: input.validTime,
-    ...input.payload,
-  };
+  try {
+    const config: axios.AxiosRequestConfig = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    switch (authType) {
+    case "basic":
+      config.headers.Authorization = `Basic ${Buffer.from(
+        `${authUsername}:${authPassword}`,
+      ).toString("base64")}`;
+      break;
+    case "static-auth-header":
+      config.headers.Authorization = authHeader;
+      break;
+    }
+
+    const response: AxiosResponse = await axios.post(
+      webhookUrl,
+      input.payload,
+      config,
+    );
+
+    // Constructing the response object
+    const webhookResponse: WebhookResponse = {
+      status: response.status,
+      statusText: response.statusText,
+      source_eventId: input.eventId,
+      timestamp: new Date().toISOString(),
+    };
+    return webhookResponse;
+  } catch (error) {
+    return {
+      status: error.response?.status || 500,
+      statusText: error.response?.statusText || "Internal Server Error",
+      source_eventId: input.eventId,
+      timestamp: new Date().toISOString(),
+    } as WebhookResponse;
+  }
 }
