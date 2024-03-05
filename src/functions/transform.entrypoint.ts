@@ -8,6 +8,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import * as process from "process";
 import { performance } from "perf_hooks";
+import { AccessToken, ClientCredentials } from "simple-oauth2";
 
 interface Input<T = any> {
   eventId: string;
@@ -23,6 +24,12 @@ const authType = process.env.AUTH_TYPE || "";
 const authHeader = process.env.AUTH_HEADER || "";
 const authUsername = process.env.AUTH_USERNAME || "";
 const authPassword = process.env.AUTH_PASSWORD || "";
+const authApiKey = process.env.AUTH_API_KEY || "";
+const authTokenHost = process.env.AUTH_TOKEN_HOST || "";
+const authTokenPath = process.env.AUTH_TOKEN_PATH || "/oauth2/token";
+const responseRecieptPath = process.env.RESPONSE_RECIEPT_PATH || "";
+
+let token: AccessToken;
 
 interface WebhookResponse {
   status: number;
@@ -33,6 +40,7 @@ interface WebhookResponse {
   eventType: string;
   aggregator: string;
   response_time?: number;
+  response?: any;
 }
 
 export default async function (input: Input) {
@@ -48,11 +56,24 @@ export default async function (input: Input) {
       config.headers.Authorization = `Basic ${Buffer.from(
         `${authUsername}:${authPassword}`,
       ).toString("base64")}`;
+      if (authApiKey) {
+        config.headers["x-api-key"] = authApiKey;
+      }
       break;
     case "static-auth-header":
       config.headers.Authorization = authHeader;
+      if (authApiKey) {
+        config.headers["x-api-key"] = authApiKey;
+      }
+      break;
+    case "oauth2":
+      config.headers.Authorization = `Bearer ${await getoAuthToken()}`;
+      if (authApiKey) {
+        config.headers["x-api-key"] = authApiKey;
+      }
       break;
     }
+
     const startTime = performance.now();
     const response: AxiosResponse = await axios.post(
       webhookUrl,
@@ -71,9 +92,11 @@ export default async function (input: Input) {
       eventType: input.eventType,
       aggregator: input.aggregator,
       response_time: Math.round(endTime - startTime),
+      response: responseRecieptPath ? response.data[responseRecieptPath] : null,
     };
     return webhookResponse;
   } catch (error) {
+    console.error(error.message);
     return {
       status: error.response?.status || 500,
       statusText: error.response?.statusText || "Internal Server Error",
@@ -83,5 +106,42 @@ export default async function (input: Input) {
       eventType: input.eventType,
       aggregator: input.aggregator,
     } as WebhookResponse;
+  }
+}
+
+async function getoAuthToken() {
+  if (token) {
+    if (!token.expired()) {
+      return token.token.access_token;
+    }
+  }
+  const config = {
+    options: {
+      bodyFormat: "json",
+    },
+    client: {
+      id: authUsername,
+      secret: authPassword,
+    },
+    auth: {
+      tokenHost: authTokenHost,
+      tokenPath: authTokenPath,
+    },
+  };
+  const client = new ClientCredentials(config);
+
+  const tokenParams = {};
+
+  try {
+    token = await client.getToken(tokenParams, {
+      headers: {
+        "x-api-key": authApiKey,
+      },
+    });
+
+    return token.token.access_token;
+  } catch (error) {
+    console.error("Access Token Error", error.message);
+    process.exit(1);
   }
 }
