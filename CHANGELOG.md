@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/argilzar/flowcore-generic-push/compare/v3.2.0...v3.3.0) (2024-03-05)
+
+
+### Features
+
+* Add oAuth2 option for authentication ([a777267](https://github.com/argilzar/flowcore-generic-push/commit/a77726783d2e6623c5e698478fdfd4f51df6eda7))
+
 ## [3.2.0](https://github.com/argilzar/flowcore-generic-push/compare/v3.1.0...v3.2.0) (2024-02-19)
 
 
