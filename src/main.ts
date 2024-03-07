@@ -20,15 +20,14 @@ app.post(
   "/transform",
   async (req: Request, res: Response): Promise<Response> => {
     const { eventId, validTime, payload, eventType, aggregator } = req.body;
-    return res.send(
-      await transform({
-        eventId,
-        validTime,
-        payload,
-        eventType,
-        aggregator,
-      }),
-    );
+    const result = await transform({
+      eventId,
+      validTime,
+      payload,
+      eventType,
+      aggregator,
+    });
+    return res.status(result.status).send(result);
   },
 );
 
