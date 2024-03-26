@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.0](https://github.com/argilzar/flowcore-generic-push/compare/v3.3.0...v3.4.0) (2024-03-26)
+
+
+### Features
+
+* Add option for client credentials as get method ([5b711b5](https://github.com/argilzar/flowcore-generic-push/commit/5b711b557e3efc6784887b40dd9b5b077ec06f06))
+
 ## [3.3.0](https://github.com/argilzar/flowcore-generic-push/compare/v3.2.0...v3.3.0) (2024-03-05)
 
 
