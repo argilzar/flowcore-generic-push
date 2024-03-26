@@ -66,6 +66,12 @@ export default async function (input: Input) {
         config.headers["x-api-key"] = authApiKey;
       }
       break;
+    case "client-credentials-get-method":
+      config.headers.Authorization = `Bearer ${await clientCredentialsGETMethod()}`;
+      if (authApiKey) {
+        config.headers["x-api-key"] = authApiKey;
+      }
+      break;
     case "oauth2":
       config.headers.Authorization = `Bearer ${await getoAuthToken()}`;
       if (authApiKey) {
@@ -106,6 +112,45 @@ export default async function (input: Input) {
       eventType: input.eventType,
       aggregator: input.aggregator,
     } as WebhookResponse;
+  }
+}
+
+async function clientCredentialsGETMethod() {
+  if (token) {
+    if (!token.expired()) {
+      return token.token.access_token;
+    }
+  }
+
+  const config = {
+    options: {
+      bodyFormat: "json",
+    },
+    client: {
+      id: authUsername,
+      secret: authPassword,
+    },
+    auth: {
+      tokenHost: authTokenHost,
+      tokenPath: authTokenPath,
+    },
+  };
+  const client = new ClientCredentials(config);
+
+  const url = `${config.auth.tokenHost}${config.auth.tokenPath}?clientId=${config.client.id}&clientSecret=${config.client.secret}`;
+
+  try {
+    const response: AxiosResponse = await axios.get(url);
+    // Manually set the token
+    const manualToken = {
+      access_token: response.data.token,
+      token_type: "Bearer",
+      expires_in: 1800,
+    };
+    token = client.createToken(manualToken);
+    return token.token.access_token;
+  } catch (error) {
+    console.error(error);
   }
 }
 
