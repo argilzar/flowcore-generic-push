@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.5.0](https://github.com/argilzar/flowcore-generic-push/compare/v3.4.0...v3.5.0) (2024-04-19)
+
+
+### Features
+
+* Add extra headers option ([72be50d](https://github.com/argilzar/flowcore-generic-push/commit/72be50d5258333e5f09230248b802fc22b66b00e))
+
+
+### Bug Fixes
+
+* Test new actions ([8940841](https://github.com/argilzar/flowcore-generic-push/commit/8940841f442cc74890eb9e5717a29aff1ba034b6))
+* Test new actions 2 ([0b27581](https://github.com/argilzar/flowcore-generic-push/commit/0b275811cca0b7dc350b948e862698270958d656))
+
 ## [3.4.0](https://github.com/argilzar/flowcore-generic-push/compare/v3.3.0...v3.4.0) (2024-03-26)
 
 
