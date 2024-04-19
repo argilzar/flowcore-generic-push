@@ -23,6 +23,7 @@ const pushName = process.env.PUSH_NAME || undefined;
 const webhookUrl = process.env.WEBHOOK_URL || "";
 const authType = process.env.AUTH_TYPE || "";
 const extraHeaders = process.env.AUTH_EXTRA_HEADERS || "";
+const extraHeadersBase64 = process.env.AUTH_EXTRA_HEADERS_BASE64 || "";
 const authHeader = process.env.AUTH_HEADER || "";
 const authUsername = process.env.AUTH_USERNAME || "";
 const authPassword = process.env.AUTH_PASSWORD || "";
@@ -87,8 +88,17 @@ export default async function (input: Input) {
         const [key, value] = header.split(":");
         config.headers[key] = value;
       });
-      console.log("Extra headers added to the request", config.headers);
     }
+    if (extraHeadersBase64) {
+      const headers = Buffer.from(extraHeadersBase64, "base64")
+        .toString("utf-8")
+        .split(",");
+      headers.forEach((header) => {
+        const [key, value] = header.split(":");
+        config.headers[key] = value;
+      });
+    }
+
     const startTime = performance.now();
     const response: AxiosResponse = await axios.post(
       webhookUrl,
