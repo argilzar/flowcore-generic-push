@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.1](https://github.com/argilzar/flowcore-generic-push/compare/v3.5.0...v3.5.1) (2024-04-19)
+
+
+### Bug Fixes
+
+* Base64 headers ([8fcb99b](https://github.com/argilzar/flowcore-generic-push/commit/8fcb99b7e0e77d20a851ccb76cecc3aecdb57578))
+
 ## [3.5.0](https://github.com/argilzar/flowcore-generic-push/compare/v3.4.0...v3.5.0) (2024-04-19)
 
 
