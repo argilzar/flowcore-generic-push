@@ -9,6 +9,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import * as process from "process";
 import { performance } from "perf_hooks";
 import { AccessToken, ClientCredentials } from "simple-oauth2";
+import * as console from "console";
 
 interface Input<T = any> {
   eventId: string;
@@ -21,6 +22,7 @@ interface Input<T = any> {
 const pushName = process.env.PUSH_NAME || undefined;
 const webhookUrl = process.env.WEBHOOK_URL || "";
 const authType = process.env.AUTH_TYPE || "";
+const extraHeaders = process.env.AUTH_EXTRA_HEADERS || "";
 const authHeader = process.env.AUTH_HEADER || "";
 const authUsername = process.env.AUTH_USERNAME || "";
 const authPassword = process.env.AUTH_PASSWORD || "";
@@ -79,7 +81,14 @@ export default async function (input: Input) {
       }
       break;
     }
-
+    if (extraHeaders) {
+      const headers = extraHeaders.split(",");
+      headers.forEach((header) => {
+        const [key, value] = header.split(":");
+        config.headers[key] = value;
+      });
+      console.log("Extra headers added to the request", config.headers);
+    }
     const startTime = performance.now();
     const response: AxiosResponse = await axios.post(
       webhookUrl,
