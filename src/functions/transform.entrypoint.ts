@@ -10,6 +10,7 @@ import * as process from "process";
 import { performance } from "perf_hooks";
 import { AccessToken, ClientCredentials } from "simple-oauth2";
 import * as console from "console";
+import { Buffer } from "buffer";
 
 interface Input<T = any> {
   eventId: string;
@@ -47,6 +48,7 @@ interface WebhookResponse {
 }
 
 export default async function (input: Input) {
+  const startTime = performance.now();
   try {
     const config: AxiosRequestConfig = {
       headers: {
@@ -55,36 +57,36 @@ export default async function (input: Input) {
     };
 
     switch (authType) {
-    case "basic":
-      config.headers.Authorization = `Basic ${Buffer.from(
-        `${authUsername}:${authPassword}`,
-      ).toString("base64")}`;
-      if (authApiKey) {
-        config.headers["x-api-key"] = authApiKey;
-      }
-      break;
-    case "static-auth-header":
-      config.headers.Authorization = authHeader;
-      if (authApiKey) {
-        config.headers["x-api-key"] = authApiKey;
-      }
-      break;
-    case "client-credentials-get-method":
-      config.headers.Authorization = `Bearer ${await clientCredentialsGETMethod()}`;
-      if (authApiKey) {
-        config.headers["x-api-key"] = authApiKey;
-      }
-      break;
-    case "oauth2":
-      config.headers.Authorization = `Bearer ${await getoAuthToken()}`;
-      if (authApiKey) {
-        config.headers["x-api-key"] = authApiKey;
-      }
-      break;
+      case "basic":
+        config.headers.Authorization = `Basic ${Buffer.from(
+          `${authUsername}:${authPassword}`,
+        ).toString("base64")}`;
+        if (authApiKey) {
+          config.headers["x-api-key"] = authApiKey;
+        }
+        break;
+      case "static-auth-header":
+        config.headers.Authorization = authHeader;
+        if (authApiKey) {
+          config.headers["x-api-key"] = authApiKey;
+        }
+        break;
+      case "client-credentials-get-method":
+        config.headers.Authorization = `Bearer ${await clientCredentialsGETMethod()}`;
+        if (authApiKey) {
+          config.headers["x-api-key"] = authApiKey;
+        }
+        break;
+      case "oauth2":
+        config.headers.Authorization = `Bearer ${await getoAuthToken()}`;
+        if (authApiKey) {
+          config.headers["x-api-key"] = authApiKey;
+        }
+        break;
     }
     if (extraHeaders) {
       const headers = extraHeaders.split(",");
-      headers.forEach((header) => {
+      headers.forEach((header: string) => {
         const [key, value] = header.split(":");
         config.headers[key] = value;
       });
@@ -99,7 +101,6 @@ export default async function (input: Input) {
       });
     }
 
-    const startTime = performance.now();
     const response: AxiosResponse = await axios.post(
       webhookUrl,
       input.payload,
@@ -120,7 +121,7 @@ export default async function (input: Input) {
       response: responseRecieptPath ? response.data[responseRecieptPath] : null,
     };
     return webhookResponse;
-  } catch (error) {
+  } catch (error: any) {
     console.error(error.message);
     return {
       status: error.response?.status || 500,
@@ -130,6 +131,8 @@ export default async function (input: Input) {
       pushName,
       eventType: input.eventType,
       aggregator: input.aggregator,
+      response: error.response?.data,
+      response_time: performance.now() - startTime,
     } as WebhookResponse;
   }
 }
