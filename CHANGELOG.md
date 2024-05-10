@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.2](https://github.com/argilzar/flowcore-generic-push/compare/v3.5.1...v3.5.2) (2024-05-10)
+
+
+### Bug Fixes
+
+* Add error text to result ([9b4701e](https://github.com/argilzar/flowcore-generic-push/commit/9b4701e5d47e979e44f157c8dc546247ce22ae0b))
+
 ## [3.5.1](https://github.com/argilzar/flowcore-generic-push/compare/v3.5.0...v3.5.1) (2024-04-19)
 
 
