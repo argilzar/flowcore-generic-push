@@ -32,6 +32,8 @@ const authApiKey = process.env.AUTH_API_KEY || "";
 const authTokenHost = process.env.AUTH_TOKEN_HOST || "";
 const authTokenPath = process.env.AUTH_TOKEN_PATH || "/oauth2/token";
 const responseRecieptPath = process.env.RESPONSE_RECIEPT_PATH || "";
+const onErrorSaveOriginalEvent =
+  process.env.ON_ERROR_SAVE_ORIGINAL_EVENT == "true";
 
 let token: AccessToken;
 
@@ -133,6 +135,7 @@ export default async function (input: Input) {
       aggregator: input.aggregator,
       response: error.response?.data,
       response_time: performance.now() - startTime,
+      originalEvent: onErrorSaveOriginalEvent ? input : null,
     } as WebhookResponse;
   }
 }
